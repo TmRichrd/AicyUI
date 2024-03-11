@@ -3,12 +3,8 @@
     <AicyIcon size="20" color="blue">
       <CashOutline />
     </AicyIcon>
-    <AicyTree
-      :data="data"
-      label-field="label"
-      key-field="key"
-      children-field="children"
-    ></AicyTree>
+    <AicyTree :data="data" label-field="label" key-field="key" children-field="children"
+      :default-checked-keys="defaultCheckedKeys" :default-expanded-keys="defaultExpandedKeys"></AicyTree>
   </div>
 </template>
 
@@ -44,7 +40,9 @@ function createLabel(level: number) {
   return ''
 }
 const data = ref<TreeOption[]>(createData())
-console.log('data: ', data)
+console.log("🚀 ~ data:", data);
+const defaultCheckedKeys = ref([])
+const defaultExpandedKeys = ref(['40', '4030'])
 </script>
 
 <style scoped></style>
