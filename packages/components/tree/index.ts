@@ -9,3 +9,4 @@ declare module 'vue' {
     AicyTree: typeof Tree;
   }
 }
+export * from "./src/tree"

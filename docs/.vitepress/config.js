@@ -29,8 +29,8 @@ module.exports = {
         {
           text: '基础组件',
           items: [
-            {text: 'Icon', link: '/component/icon'},
-            {text: 'Button', link: '/component/button'}
+            {text: 'Icon 图标', link: '/component/icon'},
+            {text: 'Button 按钮', link: '/component/button'}
           ]
         }
       ]

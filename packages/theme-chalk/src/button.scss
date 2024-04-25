@@ -1,0 +1,144 @@
+@use 'mixins/mixins' as *;
+@use 'common/var' as *;
+
+@keyframes ratate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@include b(button) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: inherit;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  use-select: none;
+  line-height: 1;
+  vertical-align: middle;
+  padding: 8px 15px;
+
+  @include b(button) {
+    margin-left: 8px;
+  }
+  @include m(large) {
+    padding: 12px 20px;
+    min-height: 40px;
+    font-size: 14px;
+  }
+  @include m(default) {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  @include m(small) {
+    padding: 5px 11px;
+    font-size: 12px;
+    min-height: 24px;
+  }
+  @include when(disabled) {
+    &,
+    &:hover,
+    &:focus {
+      cursor: not-allowed;
+    }
+  }
+  
+  @include when(round) {
+    border-radius: 20px;
+  }
+  @include m(primary) {
+    @include button-variant($color-white, $color-primary, $color-primary);
+    
+    @include when(disabled) {
+      @include button-variant(
+        $color-disabled-primary,
+        $color-disabled-primary,
+        $color-disabled-primary
+      );
+      color: $color-white;
+    }
+    @include when(text) {
+      color: $color-primary;
+    }
+  }
+  @include m(success) {
+    @include button-variant($color-white, $color-success, $color-success);
+    @include when(disabled) {
+      @include button-variant(
+        $color-disabled-success,
+        $color-disabled-success,
+        $color-disabled-success
+      );
+      color: $color-white;
+    }
+    @include when(text) {
+      color: $color-success;
+    }
+  }
+  @include m(warning) {
+    @include button-variant($color-white, $color-warning, $color-warning);
+    @include when(disabled) {
+      @include button-variant(
+        $color-disabled-warning,
+        $color-disabled-warning,
+        $color-disabled-warning
+      );
+      color: $color-white;
+    }
+    @include when(text) {
+      color: $color-warning;
+    }
+  }
+  @include m(danger) {
+    @include button-variant($color-white, $color-danger, $color-danger);
+    
+    @include when(disabled) {
+      @include button-variant(
+        $color-disabled-danger,
+        $color-disabled-danger,
+        $color-disabled-danger
+      );
+      color: $color-white;
+    }
+    @include when(text) {
+      color: $color-danger;
+    }
+  }
+  @include m(info) {
+    @include button-variant($color-white, $color-info, $color-info);
+    
+    @include when(disabled) {
+      @include button-variant(
+        $color-disabled-info,
+        $color-disabled-info,
+        $color-disabled-info
+      );
+      color: $color-white;
+    }
+    @include when(text) {
+      color: $color-info;
+    }
+  }
+  @include b(icon) {
+    + span {
+      margin-left: 6px;
+    }
+  }
+  & + & {
+    margin-left: 8px;
+  }
+  @include when(text) {
+    border: transparent;
+    padding: 2px;
+    height: auto;
+    background-color: transparent;
+  }
+  @include when(circle) {
+    border-radius: 50%;
+    padding: 12px;
+  }
+}

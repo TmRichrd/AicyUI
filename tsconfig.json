@@ -6,6 +6,8 @@
     "removeComments": true,
     "moduleResolution": "node",
     "jsx": "preserve",
+    "jsxFactory":"h",
+    "jsxFragmentFactory": "Fragment",
     "noLib": false,
     "target": "ES6",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
     "sourceMap": true,

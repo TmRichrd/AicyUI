@@ -1,12 +1,13 @@
 <template>
   <div :class="bem.b()">
-    <AicyTreeNode v-for="node in flattenTree" :key="node.key" :node="node" :expanded="isExpanded(node)" @toggle="toggleExpand" />
+    <AicyTreeNode v-for="node in flattenTree" :key="node.key" :node="node" :expanded="isExpanded(node)"
+      @toggle="toggleExpand" :loadingKeys="loadingKeysRef" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { TreeNode, TreeOption, treeProps } from './tree';
+import { Key, TreeNode, TreeOption, treeProps } from './tree';
 import { createNamespace } from '@aicy-ui/utils/create';
 import AicyTreeNode from "./treeNode.vue"
 const bem = createNamespace('tree')
@@ -31,7 +32,7 @@ function createOptions(key: string, label: string, children: string) {
 }
 const treeOptions = createOptions(props.keyField, props.labelField, props.childrenField)
 
-function createTree(data: TreeOption[]): any {
+function createTree(data: TreeOption[], parent: TreeNode | null = null): any {
   function traversal(data: TreeOption[], parent: TreeNode | null = null) {
     return data.map((node) => {
       const children = treeOptions.getChildren(node) || []
@@ -49,7 +50,7 @@ function createTree(data: TreeOption[]): any {
       return treeNode
     })
   }
-  const result: TreeNode[] = traversal(data)
+  const result: TreeNode[] = traversal(data, parent)
   return result
 }
 watch(
@@ -62,8 +63,8 @@ watch(
 
 const expandedKeysSet = ref(new Set(props.defaultExpandedKeys))
 const flattenTree = computed(() => {
-  let expandedKeys = expandedKeysSet.value
-  let flattenNodes: TreeNode[] = []
+  const expandedKeys = expandedKeysSet.value
+  const flattenNodes: TreeNode[] = []
   const nodes = tree.value
   const stack: TreeNode[] = []
 
@@ -95,13 +96,33 @@ function collpase(node: TreeNode) {
   expandedKeysSet.value.delete(node.key)
 }
 
+const loadingKeysRef = ref(new Set<Key>())
+
+function triggerLoading(node: TreeNode) {
+  if (!node.children.length && !node.isLeaf) {
+    const loadingKeys = loadingKeysRef.value
+    if (!loadingKeys.has(node.key)) {
+      loadingKeys.add(node.key)
+      const onLoad = props.onLoad
+      if (onLoad) {
+        onLoad(node.rawNode).then((children) => {
+          node.rawNode.children = children
+          node.children = createTree(children, node)
+          loadingKeys.delete(node.key)
+        })
+      }
+    }
+  }
+}
+
 function expand(node: TreeNode) {
   expandedKeysSet.value.add(node.key)
-
+  triggerLoading(node)
 }
+
 function toggleExpand(node: TreeNode) {
   const expandKeys = expandedKeysSet.value
-  if (expandKeys.has(node.key)) {
+  if (expandKeys.has(node.key) && !loadingKeysRef.value.has(node.key)) {
     collpase(node)
   } else {
     expand(node)
